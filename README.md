@@ -21,42 +21,9 @@ An autoregressive Spiking Neural Network (SNN) language model constrained by the
 
 ## System Architecture
 
-```
-                       ┌────────────────────────────────────────┐
-                       │           Input Token Stream           │
-                       └───────────────────┬────────────────────┘
-                                           │
-                                           ▼
-                       ┌────────────────────────────────────────┐
-                       │       Embedding Layer (Vocab=32)       │
-                       └───────────────────┬────────────────────┘
-                                           │
-                                    I_ext  ▼
-                       ┌────────────────────────────────────────┐
-                       │ Biological Recurrent SNN Core (LIF)    │
-                       │                                        │
-                       │  • 12,288 Neurons (FAFB EM Subgraph)   │
-                       │  • 619,986 Synapses (99.59% Sparse)    │
-                       │  • W_eff = W_rec ⊙ Bio_Mask            │
-                       │  • Leak λ = 0.88, V_th = 1.0           │
-                       │  • FastSigmoid Surrogate Gradient      │
-                       └───────────┬────────────────┬───────────┘
-                                   │                │
-                        Spikes S_t │                │ Spikes S_t (Queue)
-                                   ▼                ▼
-         ┌─────────────────────────────────┐   ┌───────────────────────────────┐
-         │ Readout Head (GELU + MLP)       │   │ VisPy 3D OpenGL Visualizer    │
-         │                                 │   │                               │
-         │ Linear(12288 -> 512) -> GELU    │   │ • 3D EM Coordinates (nm)      │
-         │ -> Linear(512 -> 32)            │   │ • 8 Neuropil Partitions       │
-         │                                 │   │ • 60 FPS Decay & Flare Loop   │
-         └─────────────────┬───────────────┘   └───────────────────────────────┘
-                           │
-                           ▼
-         ┌─────────────────────────────────┐
-         │ Autoregressive Next-Char Logits │
-         └─────────────────────────────────┘
-```
+<p align="center">
+  <img src="assets/flowchart.svg" alt="Fly-LLM System Architecture Flowchart" width="100%">
+</p>
 
 ---
 
@@ -157,7 +124,8 @@ Training a 12,288-neuron recurrent model across sequence lengths of 96 requires 
 fly-llm/
 ├── assets/
 │   ├── brain_visualizer.jpg    # Primary hero thumbnail of the 3D visualizer
-│   └── brain_visualizer.png    # High-resolution visualizer render
+│   ├── brain_visualizer.png    # High-resolution visualizer render
+│   └── flowchart.svg           # Vector system architecture flowchart
 ├── coordinates.csv.gz          # EM physical spatial coordinates for Drosophila neurons
 ├── corpus.txt                  # Preprocessed training text corpus
 ├── fly_connectome_csr.npz      # Compressed CSR adjacency matrix of the connectome

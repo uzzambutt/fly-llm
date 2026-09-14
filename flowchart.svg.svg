@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 900" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 2 L 7 5 L 1 8 z" fill="#334155" />
+    </marker>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #0F172A; }
+    .box-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 600; fill: #0F172A; }
+    .box-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 13px; fill: #1E293B; }
+    .mono { font-family: "JetBrains Mono", Consolas, Menlo, monospace; }
+    .label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: #334155; }
+    .math-var { font-family: "Times New Roman", Times, Georgia, serif; font-style: italic; font-size: 15px; }
+    .math-sub { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 10px; font-style: normal; baseline-shift: sub; }
+    .math-sub-var { font-family: "Times New Roman", Times, Georgia, serif; font-size: 11px; font-style: italic; baseline-shift: sub; }
+    .box { stroke: #1E293B; stroke-width: 1.5; }
+    .connector { stroke: #334155; stroke-width: 1.5; fill: none; }
+  </style>
+
+  <!-- Background -->
+  <rect width="820" height="900" fill="#F8FAFC" />
+
+  <!-- Diagram Title -->
+  <text class="title" x="40" y="45">System Architecture</text>
+
+  <!-- ==================== CONNECTORS ==================== -->
+
+  <!-- Input -> Embedding -->
+  <line class="connector" x1="410" y1="130" x2="410" y2="182" marker-end="url(#arrow)" />
+
+  <!-- Embedding -> SNN Core -->
+  <line class="connector" x1="410" y1="234" x2="410" y2="312" marker-end="url(#arrow)" />
+  <rect x="382" y="260" width="56" height="20" fill="#F8FAFC" />
+  <text class="label" x="410" y="275" text-anchor="middle"><tspan class="math-var">I</tspan><tspan class="math-sub">ext</tspan></text>
+
+  <!-- SNN Core -> Readout Head -->
+  <line class="connector" x1="280" y1="520" x2="280" y2="602" marker-end="url(#arrow)" />
+  <rect x="225" y="550" width="110" height="20" fill="#F8FAFC" />
+  <text class="label" x="280" y="565" text-anchor="middle">Spikes <tspan class="math-var">S</tspan><tspan class="math-sub-var">t</tspan></text>
+
+  <!-- SNN Core -> VisPy Visualizer -->
+  <line class="connector" x1="550" y1="520" x2="550" y2="602" marker-end="url(#arrow)" />
+  <rect x="465" y="550" width="170" height="20" fill="#F8FAFC" />
+  <text class="label" x="550" y="565" text-anchor="middle">Spikes <tspan class="math-var">S</tspan><tspan class="math-sub-var">t</tspan> (Queue)</text>
+
+  <!-- Readout Head -> Logits -->
+  <line class="connector" x1="280" y1="730" x2="280" y2="782" marker-end="url(#arrow)" />
+
+  <!-- ==================== BOXES ==================== -->
+
+  <!-- Box 1: Input Token Stream -->
+  <rect class="box" x="270" y="80" width="280" height="50" fill="#FEF08A" />
+  <text class="box-title" x="410" y="111" text-anchor="middle">Input Token Stream</text>
+
+  <!-- Box 2: Embedding Layer -->
+  <rect class="box" x="270" y="184" width="280" height="50" fill="#BAE6FD" />
+  <text class="box-title" x="410" y="215" text-anchor="middle">Embedding Layer (Vocab=32)</text>
+
+  <!-- Box 3: Biological Recurrent SNN Core -->
+  <rect class="box" x="215" y="314" width="390" height="206" fill="#BFDBFE" />
+  <text class="box-title" x="235" y="344">Biological Recurrent SNN Core (LIF)</text>
+  <text class="box-text" x="245" y="378">•  12,288 Neurons (FAFB EM Subgraph)</text>
+  <text class="box-text" x="245" y="406">•  619,986 Synapses (99.59% Sparse)</text>
+  <text class="box-text" x="245" y="434">•  <tspan class="math-var">W</tspan><tspan class="math-sub">eff</tspan> = <tspan class="math-var">W</tspan><tspan class="math-sub">rec</tspan> &#x2299; Bio_Mask</text>
+  <text class="box-text" x="245" y="462">•  Leak <tspan class="math-var">λ</tspan> = 0.88, <tspan class="math-var">V</tspan><tspan class="math-sub">th</tspan> = 1.0</text>
+  <text class="box-text" x="245" y="490">•  FastSigmoid Surrogate Gradient</text>
+
+  <!-- Box 4: Readout Head -->
+  <rect class="box" x="160" y="604" width="240" height="126" fill="#DCFCE7" />
+  <text class="box-title" x="175" y="632">Readout Head (GELU + MLP)</text>
+  <text class="box-text mono" x="175" y="668" font-size="12">Linear(12288 -&gt; 512) -&gt; GELU</text>
+  <text class="box-text mono" x="175" y="694" font-size="12">-&gt; Linear(512 -&gt; 32)</text>
+
+  <!-- Box 5: VisPy Visualizer -->
+  <rect class="box" x="430" y="604" width="240" height="126" fill="#E9D5FF" />
+  <text class="box-title" x="445" y="632">VisPy 3D OpenGL Visualizer</text>
+  <text class="box-text" x="445" y="666">•  3D EM Coordinates (nm)</text>
+  <text class="box-text" x="445" y="690">•  8 Neuropil Partitions</text>
+  <text class="box-text" x="445" y="714">•  60 FPS Decay &amp; Flare Loop</text>
+
+  <!-- Box 6: Logits -->
+  <rect class="box" x="160" y="784" width="240" height="46" fill="#D1FAE5" />
+  <text class="box-title" x="280" y="813" text-anchor="middle">Autoregressive Next-Char Logits</text>
+</svg>
