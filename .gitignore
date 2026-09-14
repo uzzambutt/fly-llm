@@ -1,0 +1,21 @@
+# Virtual Environment
+fly_env/
+env/
+venv/
+.venv/
+
+# PyTorch Checkpoints (>100MB exceeds GitHub push limit without external storage)
+*.pt
+*.pth
+fly_brain_checkpoint.pt
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS / Editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
